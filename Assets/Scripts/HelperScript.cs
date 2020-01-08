@@ -84,19 +84,34 @@ public class HelperScript : MonoBehaviour
         return sum/Vectors.Count;
     }
 
-    // public static Vector2 FindMinMaxFromVector3(List<Vector3> vectors)
-    // {
-    //     float? min = null;
-    //     float? max = null;
+    public static Vector2 FindGridSize(List<Node> Nodes)
+    {
+        //These number just need to be large since fiddling with nullable int's was being difficult
+        int minx = 1000000;
+        int maxx = -1000000;
+        int miny = 1000000;
+        int maxy = -1000000;
 
-    //     foreach(Vector3 vec in vectors)
-    //     {
-    //         if(min != null && max != null)
-    //         {
-    //             if(min < vec.x)
-    //         }
-    //     }
-    //     return new Vector2(0,0);
-    // }
+        foreach(Node node in Nodes)
+        {
+            if(minx > (int)node.worldPosition.x)
+            {
+                minx = (int)node.worldPosition.x;
+            }
+            else if(maxx < (int)node.worldPosition.x)
+            {
+                maxx = (int)node.worldPosition.x;
+            }
+            if(miny > (int)node.worldPosition.z)
+            {
+                miny = (int)node.worldPosition.z;
+            }
+            else if(maxy < (int)node.worldPosition.z)
+            {
+                maxy = (int)node.worldPosition.z;
+            }
+        }
+        return new Vector2(((float)maxx - (float)minx),((float)maxy - (float)miny));
+    }
     
 }

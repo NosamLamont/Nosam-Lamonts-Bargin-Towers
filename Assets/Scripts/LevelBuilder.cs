@@ -18,11 +18,15 @@ public class LevelBuilder : MonoBehaviour
     public Material enemyWaypointMat;
     public Material enemyStartMat;
     public Material enemyFinishMat;
+
+    public Transform testUnit;
+
     public Level newLevel;
     
-    public List<Node> Grid;
+    public List<Node> pathfindingGrid;
+
+    public Vector2 GridSize;
     
-    //
     private void Awake()
     {
         //Get Pixel Data from image --> Name of the image(png) you want to use 
@@ -35,9 +39,8 @@ public class LevelBuilder : MonoBehaviour
         enemyStartDefaultHeight = 1.0f;
         enemyEndDefaultHeight = 1.0f;
         newLevel = new Level();
-        Grid = new List<Node>();
+        pathfindingGrid = new List<Node>();
         BuildLevel(LevelName);
-        
     }
 
     private void BuildLevel(string LevelName)
@@ -97,11 +100,15 @@ public class LevelBuilder : MonoBehaviour
                 HelperScript.LoadPrefabAtPosition("EnemyWaypoint", position, objEnemyWaypoints);
             }
         }
-        //find the way points that are grouped together to form 1 way point. Maybe group the meshes together
 
+        //find the way points that are grouped together to form 1 way point. Maybe group the meshes together
         HelperScript.LoadPrefabAtPosition("EnemyStartPoint", HelperScript.CenterOfVectors(newLevel.start));
         HelperScript.LoadPrefabAtPosition("EnemyEndPoint", HelperScript.CenterOfVectors(newLevel.end));
-        AddObjectNodesToGrid();
+        
+        pathfindingGrid = AddObjectNodesToPathfindingGrid();
+        GridSize = HelperScript.FindGridSize(pathfindingGrid);
+
+        //Might want this later? I dunno man
         //HelperScript.CombineChildMeshes(objEnemyPaths, enemyPathMat);
         //organiseWaypoints(objEnemyWaypoints);
     }
@@ -147,43 +154,35 @@ public class LevelBuilder : MonoBehaviour
         return newLevel;
     }
 
-    // private void organiseWaypoints(GameObject waypoints)
-    // {
-    //     //find waypoints near each other
-    //     //combine waypoints that are near each other
-    //     //loop above
-    //     GameObject[] waypoint = new GameObject[waypoints.transform.childCount];
-
-    //     for(int i = 0; i < waypoints.transform.childCount; i++)
-    //     {
-    //         waypoint[i] = waypoints.transform.GetChild(i).gameObject;
-    //     }
-
-    //     foreach(GameObject obj in waypoint)
-    //     {
-            
-    //     }
-    // }
-
-    private void AddObjectNodesToGrid()
+    //Adds objects to the pathfinding grid
+    private List<Node> AddObjectNodesToPathfindingGrid()
     {
+        List<Node> Grid = new List<Node>();
         Wall[] objects = GameObject.FindObjectsOfType<Wall>();
         Path[] paths = GameObject.FindObjectsOfType<Path>();
         Debug.Log(objects.Length);
-        foreach(Wall obj in objects)
+        if(objects != null)
         {
-            Grid.Add(obj.gameObject.GetComponent<Wall>().node);
+            foreach(Wall obj in objects)
+            {
+                Grid.Add(obj.gameObject.GetComponent<Wall>().node);
+            }
         }
-        foreach(Path obj in paths)
+
+        if(paths != null)
         {
-            Grid.Add(obj.gameObject.GetComponent<Path>().node);
-        }      
+            foreach(Path obj in paths)
+            {
+                Grid.Add(obj.gameObject.GetComponent<Path>().node);
+            }  
+        }
+        return Grid;
     }
 
     private void OnDrawGizmos() {
         if(newLevel != null)
         {
-            foreach(Node n in Grid)
+            foreach(Node n in pathfindingGrid)
             {
                 Gizmos.color = (n.walkable)?Color.white:Color.red;
                 Gizmos.DrawCube(n.worldPosition,new Vector3(1f,0.1f,1f));
@@ -191,5 +190,6 @@ public class LevelBuilder : MonoBehaviour
         }
 
     }
+
 
 }
