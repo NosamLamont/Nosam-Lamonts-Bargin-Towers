@@ -10,8 +10,6 @@ public class EnvironmentObject : MonoBehaviour
 
     public EnvironmentObject()
     {
-        walkable = true;
-        constructable = true;
         
     }
     
@@ -19,7 +17,7 @@ public class EnvironmentObject : MonoBehaviour
     void Awake()
     {
         //y is always zero sinces its meant to be 2d plane grid.
-        node = new Node(walkable, constructable, new Vector3(transform.position.x, -1, transform.position.z));
+        node = new Node(true, true, new Vector3(transform.position.x, -1, transform.position.z));
 
     }
 }

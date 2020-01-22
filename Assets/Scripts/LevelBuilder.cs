@@ -13,6 +13,8 @@ public class LevelBuilder : MonoBehaviour
     public float enemyStartDefaultHeight;
     public float enemyEndDefaultHeight;
 
+    public PathfindingGrid PathfindingGrid;
+
     public Material wallMat;
     public Material enemyPathMat;
     public Material enemyWaypointMat;
@@ -23,8 +25,10 @@ public class LevelBuilder : MonoBehaviour
 
     public Level newLevel;
     
+    //Grid used for units to find their way to th grid.
     public List<Node> pathfindingGrid;
 
+    //Stores the size of the gride (remember is x and z, even tho its x and y...)
     public Vector2 GridSize;
     
     private void Awake()
@@ -39,7 +43,7 @@ public class LevelBuilder : MonoBehaviour
         enemyStartDefaultHeight = 1.0f;
         enemyEndDefaultHeight = 1.0f;
         newLevel = new Level();
-        pathfindingGrid = new List<Node>();
+        PathfindingGrid = new PathfindingGrid();
         BuildLevel(LevelName);
     }
 
@@ -59,8 +63,6 @@ public class LevelBuilder : MonoBehaviour
 
     private void BuildMaze(Level newLevel)
     {
-        Mesh myMesh = new Mesh();
-
         GameObject objWalls = new GameObject("Walls");
         objWalls.AddComponent<MeshFilter>();
         objWalls.AddComponent<MeshRenderer>();
@@ -105,8 +107,8 @@ public class LevelBuilder : MonoBehaviour
         HelperScript.LoadPrefabAtPosition("EnemyStartPoint", HelperScript.CenterOfVectors(newLevel.start));
         HelperScript.LoadPrefabAtPosition("EnemyEndPoint", HelperScript.CenterOfVectors(newLevel.end));
         
-        pathfindingGrid = AddObjectNodesToPathfindingGrid();
-        GridSize = HelperScript.FindGridSize(pathfindingGrid);
+        PathfindingGrid.Grid = AddObjectNodesToPathfindingGrid();
+        PathfindingGrid.GridSize = HelperScript.FindGridSize(PathfindingGrid.Grid);
 
         //Might want this later? I dunno man
         //HelperScript.CombineChildMeshes(objEnemyPaths, enemyPathMat);
@@ -155,12 +157,14 @@ public class LevelBuilder : MonoBehaviour
     }
 
     //Adds objects to the pathfinding grid
+    //Objects should not be seperate, they should exist in one List.
     private List<Node> AddObjectNodesToPathfindingGrid()
     {
         List<Node> Grid = new List<Node>();
+        //EnvironmentObject[] objectss = GameObject.FindObjectOfType<Wall>();
         Wall[] objects = GameObject.FindObjectsOfType<Wall>();
         Path[] paths = GameObject.FindObjectsOfType<Path>();
-        Debug.Log(objects.Length);
+
         if(objects != null)
         {
             foreach(Wall obj in objects)
@@ -176,20 +180,24 @@ public class LevelBuilder : MonoBehaviour
                 Grid.Add(obj.gameObject.GetComponent<Path>().node);
             }  
         }
+        
         return Grid;
     }
 
     private void OnDrawGizmos() {
         if(newLevel != null)
         {
-            foreach(Node n in pathfindingGrid)
+            Node unitNode = PathfindingGrid.NodeFromWroldPoint(new Vector3(testUnit.position.x, 0, testUnit.position.z));
+            Debug.Log("x: " + unitNode.worldPosition.x + " z: " + unitNode.worldPosition.z);
+            foreach(Node n in PathfindingGrid.Grid)
             {
                 Gizmos.color = (n.walkable)?Color.white:Color.red;
+                if(unitNode == n)
+                {
+                    Gizmos.color = Color.cyan;
+                }
                 Gizmos.DrawCube(n.worldPosition,new Vector3(1f,0.1f,1f));
             }
         }
-
     }
-
-
 }

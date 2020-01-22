@@ -14,5 +14,10 @@ public class Node
         constuctable = _constuctable;
         worldPosition = _worldPos;
     }
+
+    public Node(Vector3 _worldPos)
+    {
+        worldPosition = _worldPos;
+    }
 }
 

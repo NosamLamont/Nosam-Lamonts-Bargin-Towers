@@ -12,6 +12,7 @@ public class Grid : MonoBehaviour
 
     float nodeDiameter;
     int gridSizeX, gridSizeY;
+    
     Node[,] grid;
 
     private void OnDrawGizmos() {

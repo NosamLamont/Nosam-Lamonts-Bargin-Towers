@@ -64,7 +64,6 @@ public class HelperScript : MonoBehaviour
         //Return to original position
         obj.transform.position = position;
         obj.transform.position = position;
-
     }
 
     /// Returns a vector that represents the center of a bunch of vectors
