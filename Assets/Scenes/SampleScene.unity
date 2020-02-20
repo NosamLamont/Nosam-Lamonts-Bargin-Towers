@@ -500,6 +500,7 @@ MonoBehaviour:
   enemyStartMat: {fileID: 0}
   enemyFinishMat: {fileID: 0}
   testUnit: {fileID: 1273099584}
+  GridSize: {x: 0, y: 0}
 --- !u!4 &621600519
 Transform:
   m_ObjectHideFlags: 0
@@ -777,6 +778,8 @@ MonoBehaviour:
   maxFOV: 90
   sensitivity: 10
   SelectedObjects: []
+  orgBoxPos: {x: 0, y: 0}
+  endBoxPos: {x: 0, y: 0}
   selectTexture: {fileID: 0}
 --- !u!114 &882335213
 MonoBehaviour:
@@ -1041,7 +1044,7 @@ GameObject:
   - component: {fileID: 1273099582}
   - component: {fileID: 1273099581}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Test Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

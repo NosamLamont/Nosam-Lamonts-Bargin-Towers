@@ -10,15 +10,17 @@ public class PathfindingGrid
 
     public Node NodeFromWroldPoint(Vector3 worldPosition)
     {
-        float percentX = (worldPosition.x + GridSize.x/2) / GridSize.x;
-        float percentY = (worldPosition.z + GridSize.y/2) / GridSize.y;
-        percentX = Mathf.Clamp01(percentX);
-        percentY = Mathf.Clamp01(percentY);
+        // float percentX = (worldPosition.x + GridSize.x/2) / GridSize.x;
+        // float percentY = (worldPosition.z + GridSize.y/2) / GridSize.y;
+        // percentX = Mathf.Clamp01(percentX);
+        // percentY = Mathf.Clamp01(percentY);
 
-        int x = Mathf.RoundToInt((GridSize.x) * percentX);
-        int y = Mathf.RoundToInt((GridSize.y) * percentY);
+        // int x = Mathf.RoundToInt((GridSize.x) * percentX);
+        // int y = Mathf.RoundToInt((GridSize.y) * percentY);
+        int x = Mathf.RoundToInt(worldPosition.x);
+        int y = Mathf.RoundToInt(worldPosition.z);
         Vector3 RoundedVector = new Vector3(x, DefaultHeight, y);
-        Node nodeToReturn = Grid.Find(n => n.worldPosition == RoundedVector);  //Find the 
+        Node nodeToReturn = Grid.Find(n => n.worldPosition.x == RoundedVector.x && n.worldPosition.z == RoundedVector.z);  //Find the 
                 
         return nodeToReturn;
     }
